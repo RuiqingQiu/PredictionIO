@@ -67,3 +67,6 @@ The dataset are <a href="https://www.kddcup2012.org/c/kddcup2012-track1/data">he
       <li>data/mini_user_action.txt</li>
     </ul>
 </ul>
+
+##### Evaluator for Friend Recommendation:
+Query to our engine 

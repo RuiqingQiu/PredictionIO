@@ -1,25 +1,28 @@
 Parallel SimRank Algorithm
 ========================================================================
+Uses the Delta-Simrank Algorithm (http://dprg.cs.uiuc.edu/docs/deltasimrank/simrank.pdf).
 
-Parallel algorithm for calculating SimRank, using GraphX
+Takes advantage of Spark's GraphX framework and in-memory/iterative computation advantage over other MapReduce frameworks such as YARN by performing each SimRank iteration as a triple of Map and two Reduce tasks.
+
+Map1 : Emit key value pairs where each key is a pair of vertex ids adjacent to the vertices with updated scores in the previous iterations, and the value is the marginal increase in SimRank (refer to the delta-simrank algorithm for exact calculation method for deltas).
+
+Reduce1 : Aggregate delta values by key.
+
+Reduce2 : Add the delta to the previous iteration SimRank score to get the current iteration's SimRank score.
 
 Prerequisite
 ------------
-
 GraphX
 
-High Level Description
-----------------------
+Parameter Explained
+-------------------
+datasource-graphEdgelistPath : The edge-list passed to GraphX's graph loader. For efficient memory storage of intermediate SimRank score calculations, the vertex ids should be in a contiguous range from 0 to (#Vertex-1). There is a utility function for re-mapping the vertex Id values : io.prediction.examples.pfriendrecommendation.DeltaSimRankRDD.normalizeGraph.
 
-Reference to paper : http://www-cs-students.stanford.edu/~glenj/simrank.pdf
+algorithms-numIterations : Number of iterations for calculating SimRank. Typical recommended is 6-8 in various papers (e.g. http://www-cs-students.stanford.edu/~glenj/simrank.pdf)
 
-### Data Source
-
-Data source parameter takes path to edge list, which is used to specify the
-graph.
+algorithms-decay : Decay constant used in calculating incremental changes to SimRank
 
 ### Example query 
-
-curl -H "Content-Type: application/json" -d '[0,2]' http://localhost:8000/queries.json
+curl -H "Content-Type: application/json" -d '{"item1":0, "item2":2}' http://localhost:8000/queries.json
 
 This queries the SimRank score between nodes with ids 0 and 2,

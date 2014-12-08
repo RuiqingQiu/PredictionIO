@@ -1,6 +1,18 @@
 {
-  "id": "SimrankEngineParallel",
-  "version": "0.8.1-SNAPSHOT",
-  "name": "Item Recommendations",
-  "engineFactory": "io.prediction.examples.pfriendrecommendation.PSimRankEngineFactory"
+  "id": "SimRankParallelEngine",
+  "description": "Engine for graph vertex similarity using SimRank",
+  "engineFactory": "io.prediction.examples.pfriendrecommendation.PSimRankEngineFactory",
+
+  "datasource": {
+    "graphEdgelistPath": "data/edge_list_small.txt"
+  },
+  "algorithms": [
+    {
+      "name": "simrank",
+      "params": {
+        "numIterations": 6,
+        "decay":0.7
+      }
+    }
+  ]
 }

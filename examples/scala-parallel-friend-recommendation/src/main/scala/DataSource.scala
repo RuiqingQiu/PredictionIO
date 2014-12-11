@@ -39,3 +39,42 @@ class DataSource(val dsp: DataSourceParams )
     new TrainingData(g, identity)
   }
 }
+
+case class NodeSamplingDSParams(
+  val graphEdgelistPath: String,
+  val sampleFraction: Double
+) extends Params
+
+class NodeSamplingDataSource(val dsp: NodeSamplingDSParams)
+  extends PDataSource[TrainingData, EmptyEvaluationInfo, Query, Double] {
+
+  override
+  def readTraining(sc:SparkContext) : TrainingData = {
+    val g = GraphLoader.edgeListFile(sc, dsp.graphEdgelistPath)
+    val sampled = Sampling.nodeSampling(sc, g, dsp.sampleFraction)
+    val identity = DeltaSimRankRDD.identityMatrix(sc, g.vertices.count())
+    new TrainingData(sampled, identity)
+  }
+}
+
+case class FFSamplingDSParams(
+  val graphEdgelistPath: String,
+  val sampleFraction: Double,
+  val geoParam: Double
+) extends Params
+
+class ForestFireSamplingDataSource(val dsp: FFSamplingDSParams)
+  extends PDataSource[TrainingData, EmptyEvaluationInfo, Query, Double] {
+
+  override
+  def readTraining(sc:SparkContext) : TrainingData = {
+    val g = GraphLoader.edgeListFile(sc, dsp.graphEdgelistPath)
+    val sampled = Sampling.forestFireSamplingInduced(sc,
+                                                     g,
+                                                     dsp.sampleFraction,
+                                                     dsp.geoParam)
+
+    val identity = DeltaSimRankRDD.identityMatrix(sc, g.vertices.count())
+    new TrainingData(sampled, identity)
+  }
+}

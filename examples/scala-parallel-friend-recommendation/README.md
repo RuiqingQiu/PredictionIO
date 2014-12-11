@@ -10,17 +10,30 @@ Reduce1 : Aggregate delta values by key.
 
 Reduce2 : Add the delta to the previous iteration SimRank score to get the current iteration's SimRank score.
 
-Prerequisite
-------------
-GraphX
+Prerequisite: GraphX package.
 
 Parameter Explained
 -------------------
-datasource-graphEdgelistPath : The edge-list passed to GraphX's graph loader. For efficient memory storage of intermediate SimRank score calculations, the vertex ids should be in a contiguous range from 0 to (#Vertex-1). There is a utility function for re-mapping the vertex Id values : io.prediction.examples.pfriendrecommendation.DeltaSimRankRDD.normalizeGraph.
+datasource - graphEdgelistPath : The edge-list passed to GraphX's graph loader. For efficient memory storage of intermediate SimRank score calculations, the vertex ids should be in a contiguous range from 0 to (#Vertex-1). There is a utility function for re-mapping the vertex Id values : io.prediction.examples.pfriendrecommendation.DeltaSimRankRDD.normalizeGraph.
 
-algorithms-numIterations : Number of iterations for calculating SimRank. Typical recommended is 6-8 in various papers (e.g. http://www-cs-students.stanford.edu/~glenj/simrank.pdf)
+algorithms - numIterations : Number of iterations for calculating SimRank. Typical recommended is 6-8 in various papers (e.g. http://www-cs-students.stanford.edu/~glenj/simrank.pdf)
 
-algorithms-decay : Decay constant used in calculating incremental changes to SimRank
+algorithms - decay : Decay constant used in calculating incremental changes to SimRank
+
+### Configurable Datasources for Sampling
+Three data sources can be configured from the engine factory : 
+
+DataSource generates a GraphX graph using the entire dataset.
+
+NodeSamplingDataSource generates a GraphX graph after performing node sampling
+with induced edges between the sampled nodes. This data source takes an
+additional parameter, sampleFraction, which is the fraction of graph nodes to
+sample.
+
+ForestFireSamplingDataSource generates a graph after performing forest fire
+sampling. This sampling method also uses the sampleFraction parameter and takes
+an additional parameter, geoParam, which is the parameter for a geometric
+distribution that is used within forest fire sampling.
 
 ### Example query 
 curl -H "Content-Type: application/json" -d '{"item1":0, "item2":2}' http://localhost:8000/queries.json

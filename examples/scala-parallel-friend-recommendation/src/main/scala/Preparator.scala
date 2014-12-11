@@ -14,7 +14,7 @@ case class CustomPreparatorParams(
   val filepath: String
 ) extends Params
 
-class IdentityPreparator(pp: CustomPreparatorParams)
+class IdentityPreparator(pp: EmptyPreparatorParams)
   extends PPreparator[TrainingData, TrainingData] {
 
   def prepare(sc: SparkContext, trainingData: TrainingData): TrainingData = {

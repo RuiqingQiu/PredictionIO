@@ -23,14 +23,14 @@ algorithms - decay : Decay constant used in calculating incremental changes to S
 ### Configurable Datasources for Sampling
 Three data sources can be configured from the engine factory : 
 
-DataSource generates a GraphX graph using the entire dataset.
+**DataSource** generates a GraphX graph using the entire dataset.
 
-NodeSamplingDataSource generates a GraphX graph after performing node sampling
+**NodeSamplingDataSource** generates a GraphX graph after performing node sampling
 with induced edges between the sampled nodes. This data source takes an
 additional parameter, sampleFraction, which is the fraction of graph nodes to
 sample.
 
-ForestFireSamplingDataSource generates a graph after performing forest fire
+**ForestFireSamplingDataSource** generates a graph after performing forest fire
 sampling. This sampling method also uses the sampleFraction parameter and takes
 an additional parameter, geoParam, which is the parameter for a geometric
 distribution that is used within forest fire sampling.

@@ -2,7 +2,7 @@ package io.prediction.examples.friendrecommendation
 
 import io.prediction.controller._
 
-class FriendRecommendationDataSourceParams(
+class FriendRecommendationDataSourceParamsEval(
   val itemFilePath: String,
   val userKeywordFilePath: String,
   val userActionFilePath: String,

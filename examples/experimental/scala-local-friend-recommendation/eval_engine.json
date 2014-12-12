@@ -1,0 +1,20 @@
+{
+  "id": "io.prediction.examples.friendrecommendation.random",
+  "version": "0.1",
+  "name": "Friend Recommendation Engine with Random Method Evaluation",
+  "engineFactory": "io.prediction.examples.friendrecommendation.RandomEngineFactory Evaluation",
+  "datasource": {
+    "itemFilePath": "data/item.txt",
+    "userKeywordFilePath": "data/user_key_word.txt",
+    "userActionFilePath": "data/user_action.txt",
+    "trainingRecordFilePath": "data/rec_log_train.txt",
+    "testingDataFilePath":"data/rec_log_test.txt"
+  },
+  "algorithms": [
+    {
+      "name": "RandomAlgorithm",
+      "params": {
+      }
+    }
+  ]
+}

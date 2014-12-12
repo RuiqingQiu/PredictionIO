@@ -30,7 +30,7 @@ class FriendRecommendationDataSourceEval (val dsp: FriendRecommendationDataSourc
       val queryUser = data(0)
       val queryItem = data(1)
       val action = data(3) 
-      queryActualSeq += Seq[(new FriendRecommendationQuery(queryUser,queryItem),new FriendRecommendationActual(queryUser,action))]
+      queryActualSeq += (new FriendRecommendationQuery(queryUser,queryItem),new FriendRecommendationActual(queryUser,action))
    }
    
    //for training
@@ -42,11 +42,12 @@ class FriendRecommendationDataSourceEval (val dsp: FriendRecommendationDataSourc
    val (actualUserId,actualAction) = readItem(dsp.itemFilePath)
    val q = new FriendRecommendationQuery(queryUserId, queryitemKeyword) 
    val a = new FriendRecommendationActual(actualUserId,actualAction)
-   val tmp = Seq[(new FriendRecommendationTrainingData(userIdMap, itemIdMap, 
-                     userKeyword, itemKeyword, adjArray, trainingRecord),
-                    EmptyParams(),
-                    queryActualSeq]
-   return tmp
+   val tmp = (
+              new FriendRecommendationTrainingData(userIdMap, itemIdMap, userKeyword, itemKeyword, adjArray, trainingRecord),
+              EmptyParams(),
+              queryActualSeq
+            )
+   return Seq(tmp)
   }
 
   def readItem(file: String) : (HashMap[Int, Int], Array[HashMap[Int, Double]]) = {

@@ -7,15 +7,6 @@ import scala.collection.immutable.HashMap
 //dataSource and dataSourceparam only for evaluation purpose
 class FriendRecommendationDataSourceEval (val dsp: FriendRecommendationDataSourceParamsEval)
   extends LDataSource[FriendRecommendationDataSourceParamsEval, EmptyDataParams, FriendRecommendationTrainingData, FriendRecommendationQuery, FriendRecommendationActual] {
- /* 
- override
-  def readTraining() : FriendRecommendationTrainingData = {
-    val (itemIdMap, itemKeyword) = readItem(dsp.itemFilePath)
-    val (userIdMap, userKeyword) = readUser(dsp.userKeywordFilePath)
-    val adjArray = readRelationship(dsp.userActionFilePath, userKeyword.size, userIdMap)
-    val trainingRecord = readTrainingRecord(dsp.trainingRecordFilePath, userIdMap, itemIdMap)
-    new FriendRecommendationTrainingData(userIdMap, itemIdMap, userKeyword, itemKeyword, adjArray, trainingRecord)
-  }*/
 
  // override the read function for evaluator
  override
@@ -23,14 +14,16 @@ class FriendRecommendationDataSourceEval (val dsp: FriendRecommendationDataSourc
                 Seq[(FriendRecommendationQuery, FriendRecommendationActual)])] = {
    // reading the rec_log_test.txt in the format user item action timestamp
    val lines = Source.fromFile(dsp.testingFileDataPath).getLines()
-   val queryActualSeq = new Seq[(FriendRecommendation,FriendRecommendationActual)]
+   val queryActualSeq = new Seq[(FriendRecommendationQuery,FriendRecommendationActual)]
    lines.foreach{
      line => 
       val data = line.split("\\s")
       val queryUser = data(0)
       val queryItem = data(1)
       val action = data(3) 
-      queryActualSeq += Seq[(new FriendRecommendationQuery(queryUser,queryItem),new FriendRecommendationActual(queryUser,action))]
+      val q = new FriendRecommendationQuery(queryUser,queryItem)
+      val a = new FriendRecommendationActual(queryUser,action)
+      queryActualSeq += Seq[(q,a)]
    }
    
    //for training
@@ -42,11 +35,12 @@ class FriendRecommendationDataSourceEval (val dsp: FriendRecommendationDataSourc
    val (actualUserId,actualAction) = readItem(dsp.itemFilePath)
    val q = new FriendRecommendationQuery(queryUserId, queryitemKeyword) 
    val a = new FriendRecommendationActual(actualUserId,actualAction)
-   val tmp = Seq[(new FriendRecommendationTrainingData(userIdMap, itemIdMap, 
-                     userKeyword, itemKeyword, adjArray, trainingRecord),
-                    EmptyParams(),
-                    queryActualSeq]
-   return tmp
+   //training data
+   val trainingdata = new FriendRecommendationTrainingData(userIdMap,itemIdMap,
+                                                    userKeyword,itemKeyword,adjArray,
+                                                    trainingRecord)
+
+   return Seq[(trainingdata,EmptyParams(),queryActualSeq)]
   }
 
   def readItem(file: String) : (HashMap[Int, Int], Array[HashMap[Int, Double]]) = {

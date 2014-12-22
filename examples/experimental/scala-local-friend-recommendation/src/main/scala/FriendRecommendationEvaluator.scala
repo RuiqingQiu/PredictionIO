@@ -19,7 +19,7 @@ class EvalResult(
   val score: Double
 ) extends Serializable
 
-class FriendRecommendationEvaluator extends Evaluator[EmptyParams,EmptyParams, FriendRecommendationQuery,FriendRecommendationPrediction,Actual, EvaluatorUnit, EvalResult, EvalResult]{
+class FriendRecommendationEvaluator extends Evaluator[EmptyParams, FriendRecommendationQuery,FriendRecommendationPrediction,Actual, EvaluatorUnit, EvalResult, EvalResult]{
   override def evaluateUnit(query: FriendRecommendationQuery, prediction: FriendRecommendationPrediction,actual:Actual):EvaluatorUnit = {
     val score: Double = {
       if(actual.acceptance == 0)

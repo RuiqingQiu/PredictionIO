@@ -20,7 +20,7 @@ class FriendRecommendationDataSourceEval (val dsp: FriendRecommendationDataSourc
       val data = line.split("\\s")
       val queryUser = data(0)
       val queryItem = data(1)
-      val action = data(3) 
+      val action = data(2) 
       val q = new FriendRecommendationQuery(queryUser,queryItem)
       val a = new FriendRecommendationActual(queryUser,action)
       queryActualSeq += Seq[(q,a)]
